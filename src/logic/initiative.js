@@ -10,10 +10,19 @@ export function handleInitiative(initiative) {
     }));
 }
 
+export function setCombatInitiative(initiative) {
+    return [...initiative]
+        .sort((a, b) => b.initiative - a.initiative)
+        .map((entry, index) => ({
+            ...entry,
+            currentTurn: index === 0,
+        }));
+}
+
 export function addInitiative(initiative, entry) {
     return handleInitiative([
         ...initiative,
-        { ...entry, currentTurn: false },
+        {...entry, currentTurn: false},
     ]);
 }
 
@@ -99,4 +108,22 @@ export function reRollInitiative(initiative, newInitiativeValues) {
             initiative: newInitiativeValues[index],
         }))
     );
+}
+
+export function reRollEntityInitiative(initiative, index) {
+    if (
+        !Number.isInteger(index)
+        || index < 0
+        || index >= initiative.length
+    ) {
+        throw new RangeError('Initiative index is out of range');
+    }
+
+    const newInitiative = Math.floor(Math.random() * 20) + 1;
+    const updatedInitiative = initiative.map((entry, entryIndex) => (
+        entryIndex === index
+            ? {...entry, initiative: newInitiative}
+            : entry
+    ));
+    return handleInitiative(updatedInitiative);
 }

@@ -5,7 +5,10 @@ import {
     getCurrentInitiative,
     handleInitiative,
     nextInitiative,
-    previousInitiative, removeInitiative
+    previousInitiative,
+    removeInitiative,
+    reRollEntityInitiative,
+    setCombatInitiative,
 } from "../../logic/initiative.js";
 import {useEffect, useState} from "react";
 
@@ -18,6 +21,7 @@ export default function InitiativeDisplay({listOfCombatEntities}) {
     }, [list]);
     return (
         <div className="initiative-display">
+            <button onClick={() => setList(setCombatInitiative(list))}>Sort Initiative</button>
             <div className="initiative-controls">
                 <button onClick={() => setList(previousInitiative(list))}>Previous Turn</button>
                 <button onClick={() => setList(nextInitiative(list))}>Next Turn</button>
@@ -36,6 +40,7 @@ export default function InitiativeDisplay({listOfCombatEntities}) {
                                     isCurrentTurn={getCurrentInitiative(list) === index}
                                     onClick={() => setList(endTurn(list))}
                                     onRemove={() => setList(removeInitiative(list, index))}
+                                    onReroll={() => setList(reRollEntityInitiative(list, index))}
                                 />
                             </div>
                         ))}
