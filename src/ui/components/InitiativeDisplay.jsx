@@ -1,4 +1,5 @@
 import CombatEntity from "./CombatEntity.jsx";
+import DiceRoller from "./DiceRoller.jsx";
 import {
     addInitiative,
     endTurn,
@@ -47,6 +48,7 @@ export default function InitiativeDisplay({listOfCombatEntities}) {
                 </>
                 )}
             </div>
+            <DiceRoller/>
         </div>
     );
 }

@@ -121,6 +121,128 @@
   gap: 8px;
 }
 
+.dice-widget {
+  position: fixed;
+  right: max(16px, env(safe-area-inset-right));
+  bottom: max(16px, env(safe-area-inset-bottom));
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 12px;
+  max-width: calc(100vw - 32px);
+}
+
+.dice-roller {
+  box-sizing: border-box;
+  width: 380px;
+  max-width: 100%;
+  max-height: calc(100dvh - 112px);
+  overflow-y: auto;
+  padding: 20px;
+  border: 1px solid var(--accent-border);
+  border-radius: 16px;
+  background: var(--bg);
+  box-shadow: var(--shadow);
+}
+
+.initiative-display .dice-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 56px;
+  padding: 12px 20px;
+  border-radius: 999px;
+  background: var(--bg);
+  border: 2px solid var(--accent);
+  box-shadow: var(--shadow);
+  font-weight: 600;
+}
+
+.dice-toggle span {
+  font-size: 28px;
+  line-height: 1;
+}
+
+.dice-roller h2 {
+  margin: 0 0 16px;
+  color: var(--text-h);
+  font-size: 20px;
+}
+
+.dice-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  gap: 12px;
+}
+
+.dice-controls label {
+  display: grid;
+  flex: 1 1 100px;
+  gap: 6px;
+  font-size: 14px;
+}
+
+.dice-roll-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  width: 100%;
+}
+
+.dice-roll-actions button {
+  flex: 1 1 auto;
+}
+
+.dice-roll-actions button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  transform: none;
+  background: var(--accent-bg);
+  border-color: var(--accent-border);
+}
+
+.dice-controls input,
+.dice-controls select {
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 38px;
+  padding: 8px;
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  background: var(--bg);
+  color: var(--text-h);
+  font: inherit;
+}
+
+.dice-controls input:focus-visible,
+.dice-controls select:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.dice-result {
+  margin-top: 16px;
+  padding: 12px 16px;
+  border-radius: 9px;
+  background: var(--social-bg);
+  overflow-wrap: anywhere;
+}
+
+.dice-result p {
+  margin: 4px 0;
+}
+
+.dice-total {
+  color: var(--text-h);
+  font-size: 24px;
+}
+
+.dice-breakdown {
+  font-size: 14px;
+}
+
 .hero {
   position: relative;
 
