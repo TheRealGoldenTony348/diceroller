@@ -184,6 +184,25 @@
   font-size: 14px;
 }
 
+.dice-roll-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  width: 100%;
+}
+
+.dice-roll-actions button {
+  flex: 1 1 auto;
+}
+
+.dice-roll-actions button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  transform: none;
+  background: var(--accent-bg);
+  border-color: var(--accent-border);
+}
+
 .dice-controls input,
 .dice-controls select {
   box-sizing: border-box;

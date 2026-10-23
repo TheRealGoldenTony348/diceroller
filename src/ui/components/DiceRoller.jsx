@@ -11,15 +11,23 @@ export default function DiceRoller() {
 
     function rollDice(event) {
         event.preventDefault();
-        const rolls = Array.from({length: Number(count)}, () =>
+        const mode = event.nativeEvent.submitter?.value || "normal";
+        const isSpecialRoll = mode !== "normal";
+        if (isSpecialRoll && (Number(count) !== 1 || Number(sides) !== 20)) return;
+        const rolls = Array.from({length: isSpecialRoll ? 2 : Number(count)}, () =>
             Math.floor(Math.random() * Number(sides)) + 1
         );
+        const kept = isSpecialRoll
+            ? (mode === "advantage" ? Math.max(...rolls) : Math.min(...rolls))
+            : null;
         const bonus = Number(modifier);
         setResult({
             rolls,
+            mode,
+            kept,
             modifier: bonus,
             notation: `${count}d${sides}${bonus === 0 ? "" : bonus > 0 ? ` + ${bonus}` : ` − ${Math.abs(bonus)}`}`,
-            total: rolls.reduce((sum, roll) => sum + roll, 0) + bonus,
+            total: (kept ?? rolls.reduce((sum, roll) => sum + roll, 0)) + bonus,
         });
     }
 
@@ -52,12 +60,26 @@ export default function DiceRoller() {
                     <input id={`${id}-modifier`} type="number" min="-1000" max="1000" step="1" required
                            value={modifier} onChange={event => setModifier(event.target.value)}/>
                 </label>
-                <button type="submit">Roll Dice</button>
+                <div className="dice-roll-actions">
+                    <button type="submit" value="normal">Roll Dice</button>
+                    <button type="submit" value="advantage"
+                            disabled={Number(count) !== 1 || Number(sides) !== 20}
+                            aria-describedby={`${id}-advantage-help`}>Advantage</button>
+                    <button type="submit" value="disadvantage"
+                            disabled={Number(count) !== 1 || Number(sides) !== 20}
+                            aria-describedby={`${id}-advantage-help`}>Disadvantage</button>
+                </div>
+                <p id={`${id}-advantage-help`} className="dice-breakdown">
+                    For 1d20: roll twice and keep the higher (advantage) or lower (disadvantage) roll.
+                </p>
             </form>
             <div className="dice-result" role="status" aria-live="polite" aria-atomic="true">
                 {result ? <>
                     <p>{result.notation}: <strong className="dice-total">{result.total}</strong></p>
-                    <p className="dice-breakdown">Rolls: {result.rolls.join(" + ")}
+                    {result.mode !== "normal" && <p className="dice-breakdown">
+                        {result.mode === "advantage" ? "Advantage" : "Disadvantage"}: kept {result.kept}
+                    </p>}
+                    <p className="dice-breakdown">Rolls: {result.rolls.join(result.mode === "normal" ? " + " : ", ")}
                         {result.modifier !== 0 && `; modifier: ${result.modifier > 0 ? "+" : ""}${result.modifier}`}
                     </p>
                 </> : <p>Choose your dice and roll to see the result.</p>}
