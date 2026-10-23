@@ -1,3 +1,8 @@
+// Convert initial base initiatives to totals once, before managing combat turns.
+export function initializeInitiative(initiative) {
+    return reRollInitiative(initiative, initiative.map(entry => entry.initiative));
+}
+
 export function handleInitiative(initiative) {
     const currentTurn = initiative.find((entry) => entry.currentTurn);
     const sortedInitiative = [...initiative].sort(
@@ -6,6 +11,7 @@ export function handleInitiative(initiative) {
 
     return sortedInitiative.map((entry, index) => ({
         ...entry,
+        initiativeModifier: entry.initiativeModifier ?? 0,
         currentTurn: currentTurn ? entry === currentTurn : index === 0,
     }));
 }
@@ -15,6 +21,7 @@ export function setCombatInitiative(initiative) {
         .sort((a, b) => b.initiative - a.initiative)
         .map((entry, index) => ({
             ...entry,
+            initiativeModifier: entry.initiativeModifier ?? 0,
             currentTurn: index === 0,
         }));
 }
@@ -22,7 +29,11 @@ export function setCombatInitiative(initiative) {
 export function addInitiative(initiative, entry) {
     return handleInitiative([
         ...initiative,
-        {...entry, currentTurn: false},
+        {
+            ...entry,
+            initiative: entry.initiative + (entry.initiativeModifier ?? 0),
+            currentTurn: false,
+        },
     ]);
 }
 
@@ -105,7 +116,8 @@ export function reRollInitiative(initiative, newInitiativeValues) {
     return handleInitiative(
         initiative.map((entry, index) => ({
             ...entry,
-            initiative: newInitiativeValues[index],
+            // Supplied values are raw rolls; initiative stores the final total.
+            initiative: newInitiativeValues[index] + (entry.initiativeModifier ?? 0),
         }))
     );
 }
@@ -122,8 +134,25 @@ export function reRollEntityInitiative(initiative, index) {
     const newInitiative = Math.floor(Math.random() * 20) + 1;
     const updatedInitiative = initiative.map((entry, entryIndex) => (
         entryIndex === index
-            ? {...entry, initiative: newInitiative}
+            ? {...entry, initiative: newInitiative + (entry.initiativeModifier ?? 0)}
             : entry
     ));
     return handleInitiative(updatedInitiative);
+}
+
+export function updateInitiativeModifier(initiative, index, modifier) {
+    if (!Number.isInteger(index) || index < 0 || index >= initiative.length) {
+        throw new RangeError('Initiative index is out of range');
+    }
+    if (!Number.isSafeInteger(modifier)) {
+        throw new TypeError('Initiative modifier must be an integer');
+    }
+
+    return handleInitiative(initiative.map((entry, entryIndex) => (
+        entryIndex === index ? {
+            ...entry,
+            initiativeModifier: modifier,
+            initiative: entry.initiative - (entry.initiativeModifier ?? 0) + modifier,
+        } : entry
+    )));
 }

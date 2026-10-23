@@ -4,22 +4,20 @@ import {
     addInitiative,
     endTurn,
     getCurrentInitiative,
-    handleInitiative,
+    initializeInitiative,
     nextInitiative,
     previousInitiative,
     removeInitiative,
     reRollEntityInitiative,
     setCombatInitiative,
+    updateInitiativeModifier,
 } from "../../logic/initiative.js";
-import {useEffect, useState} from "react";
+import {useState} from "react";
 
 export default function InitiativeDisplay({listOfCombatEntities}) {
-    const [list, setList] = useState(listOfCombatEntities);
-    const dummyEntity = { name: "New Entity", initiative: 20, currentTurn: false };
+    const [list, setList] = useState(() => initializeInitiative(listOfCombatEntities));
+    const dummyEntity = { name: "New Entity", initiative: 20, initiativeModifier: 0, currentTurn: false };
 
-   useEffect(() => {
-        handleInitiative(list);
-    }, [list]);
     return (
         <div className="initiative-display">
             <button onClick={() => setList(setCombatInitiative(list))}>Sort Initiative</button>
@@ -29,19 +27,20 @@ export default function InitiativeDisplay({listOfCombatEntities}) {
                 <button onClick={() => setList(addInitiative(list, dummyEntity))}>Add Entity</button>
             </div>
             <div className="initiative-list">
-                {getCurrentInitiative(list) === -1 && (
+                {getCurrentInitiative(list) === undefined && (
                     <p>No active turn</p>
                 )}
-                {getCurrentInitiative(list) !== -1 && (<>
+                {getCurrentInitiative(list) !== undefined && (<>
                     <p>Current turn: {getCurrentInitiative(list)}</p>
                         {list.map((entity, index) => (
                             <div key={index}>
                                 <CombatEntity
                                     entity={entity}
-                                    isCurrentTurn={getCurrentInitiative(list) === index}
+                                    isCurrentTurn={entity.currentTurn}
                                     onClick={() => setList(endTurn(list))}
                                     onRemove={() => setList(removeInitiative(list, index))}
                                     onReroll={() => setList(reRollEntityInitiative(list, index))}
+                                    onModifierChange={modifier => setList(updateInitiativeModifier(list, index, modifier))}
                                 />
                             </div>
                         ))}
