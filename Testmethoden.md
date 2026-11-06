@@ -33,3 +33,7 @@ Dabei lässt sich überprüfen, ob die Funktionen verständlich sind, wie schnel
 
 Die Zeitgrenzen sind vorgeschlagene Zielwerte. Für die Auswertung bedeutet „ohne Hilfestellung“, dass die Testleitung
 keine Hinweise zur Bedienung gibt; die Aufforderung zum lauten Denken ist weiterhin erlaubt.
+
+Eine geeignete Testperson ist eine Person, die regelmässig oder gelegentlich Pen-and-Paper-Rollenspiele wie Dungeons & Dragons spielt. Sie kennt die Begriffe Initiative, Kampfreihenfolge und Würfeln mit Vorteil, hat die Anwendung jedoch noch nie benutzt. Dadurch lässt sich untersuchen, ob die Bedienung ohne vorherige Einführung verständlich ist.
+
+Die Testperson verfügt über grundlegende Computerkenntnisse und ist bereit, während der Aufgaben ihre Gedanken, Erwartungen und Unsicherheiten laut auszusprechen. Sie war nicht an der Entwicklung beteiligt und kann deshalb unvoreingenommen Rückmeldung geben.
